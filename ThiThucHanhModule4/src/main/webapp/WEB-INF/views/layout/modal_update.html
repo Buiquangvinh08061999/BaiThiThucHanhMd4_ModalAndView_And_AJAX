@@ -1,0 +1,67 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<th:block th:fragment="modal_update">
+
+    <div id="modalUpdateCity" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Customer information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-alert-danger hide"></div>
+
+                    <form id="frmUpdateCity" method="post">
+                        <fieldset class="row g-3">
+
+                            <div class="col-md-3">
+                                <label class="form-label">User Name</label>
+                                <input type="email" class="form-control" id="usernameUp" name="usernameUp" placeholder="txr@gmail.com">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">CounTry</label>
+                                <select name="countryUp" id="countryUp" class="form-select">
+                                    <option value="1">Việt Nam</option>
+                                    <option value="2">Lào</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Area</label>
+                                <input type="number" class="form-control" id="areaUp" name="areaUp">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">population</label>
+                                <input type="number" class="form-control" id="populationUp" name="populationUp">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">GDP</label>
+                                <input type="text" class="form-control" id="gdpUp" name="gdpUp">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Giới thiệu</label>
+                                <textarea name="description" id="descriptionUp" cols="40" rows="3"></textarea>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="btnUpdateCity" class="btn btn-outline-primary">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Update City
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</th:block>

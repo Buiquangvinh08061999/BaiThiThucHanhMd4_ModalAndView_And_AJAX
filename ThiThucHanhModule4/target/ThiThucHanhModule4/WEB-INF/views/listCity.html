@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="/layout/head :: head"/>
+
+    <link rel="stylesheet" href="/assets/css/bootstrap.minTwo.css">
+</head>
+<body>
+<div class="container">
+    <div class="row header">
+        <div class="col-sm-9 text-white">
+            <h1>Danh sách thành phố</h1>
+        </div>
+
+        <div class="col-sm-3 header--right">
+            <button type="button" class="btn btn-success create-modal">Create City</button>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 padding-0">
+            <table class="table" id="tbCity">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Thành Phố</th>
+                    <th>Quốc Gia</th>
+                    <th colspan="3">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <th:block th:replace="/layout/script :: script"/>
+</div>
+
+
+
+<th:block th:replace="/layout/modal_create :: modal_create"/>
+<th:block th:replace="/layout/modal_update :: modal_update"/>\
+
+<script>
+    let city = new City();
+    let country = new Country();
+
+    $('.create-modal').on('click', function () {
+        $('#modalCreateCity').modal('show')
+    })
+
+    function renderCustomer(city, country) {
+        let str =`
+            <tr id="tr_${city.id}">
+                <td>${city.id}</td>
+                <td>${city.name} </td>
+                <td>${country.name} </td>
+                <td>
+                    <button type="button" data-id="${city.id}" class="btn btn-outline-secondary edit"> Edit </button>
+                </td>
+                <td>
+                    <button type="button" data-id="${city.id}" class="btn btn-outline-danger deleted">Deactive </button>
+                </td>
+            </tr>
+        `;
+        return str;
+    }
+
+    function findAllCity() {
+        $.ajax({
+            header: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            type: "GET",
+            url: "http://localhost:8080/api/cities/",
+        })
+            .done((data) => {
+                $.each(data, (i, item) => {
+                    city = item;
+                    country = city.country;
+                    console.log(city.id + "cityID")
+
+                    // let str =`
+                    //       <tr id="tr_${city.id}">
+                    //         <td>${city.id}</td>
+                    //         <td>${city.name} </td>
+                    //         <td>${country.name} </td>
+                    //         <td>
+                    //                 <button type="button" data-id="${city.id}" class="btn btn-outline-secondary edit"> Edit </button>
+                    //             </td>
+                    //             <td>
+                    //                 <button type="button" data-id="${city.id}" class="btn btn-outline-danger deleted">Deactive </button>
+                    //             </td>
+                    //
+                    //     </tr>
+                    //  `;
+
+                    let str = renderCustomer(city, country);
+
+                    $('#tbCity tbody').prepend(str);
+
+                })
+
+                unbindAll();
+                handleShow();
+
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR)
+            })
+
+    }
+    findAllCity();
+
+
+    let btnCreateCity = $('#btnCreateCity');
+    btnCreateCity.on('click', function (){
+        city.name = $('#username').val();
+        city.area = $('#area').val();
+        city.population = $('#population').val();
+        city.gdp = $('#gdp').val();
+        city.description = $('#description').val();
+        city.country = country;
+
+        country.id = $('#country').val();
+        country.name = $('#country :selected').text();
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "POST",
+            "url": "http://localhost:8080/api/cities/create",
+            "data": JSON.stringify(city)
+        })
+        .done((data) => {
+            console.log(data)
+            city = data;
+            country = city.country;
+
+            /*Hàm vẽ lại rất gọn, tái sử dụng*/
+            let str = renderCustomer(city, country);
+            $('#tbCity tbody').prepend(str);
+
+            App.SweetAlert.showSuccessAlert("Tạo mới thành công");
+
+            $('#modalCreateCity').modal('hide');
+
+            clearInput();
+            unbindAll();
+            handleShow();
+
+        })
+            .fail((jqXHR) => {
+                console.log(jqXHR.responseJSON.name);
+
+                $('#modalCreateCity .modal-alert-danger').html('').removeClass('hide').addClass('show');
+                if(jqXHR.responseJSON.name){
+                    let msg = jqXHR.responseJSON.name;
+                    let str = `<label id="message-error" class="error" for="message"> ${msg} </label>`;
+
+                    $('#modalCreateCity .modal-alert-danger').append(str);
+                }
+            })
+    })
+
+
+
+    function clearInput(){
+        $("#frmCreateCity input").val("");
+        $("#frmCreateCity textarea").val("")
+    }
+
+    function handleShow(){
+        handleShowUpdate();
+        handleConfirmDelete();
+    }
+
+    function handleShowUpdate(){
+        $('button.edit').on('click', function () {
+            let cityId = $(this).data('id')
+            console.log(cityId)
+            $.ajax({
+                headers: {
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                "type": "GET",
+                "url": "http://localhost:8080/api/cities/" + cityId,
+            })
+            .done((data)=> {
+                city = data;
+                $('#usernameUp').val(city.name);
+                $('#areaUp').val(city.area);
+                $('#populationUp').val(city.population);
+                $('#gdpUp').val(city.gdp)
+                $('#descriptionUp').val(city.description)
+
+                $('#countryUp').val(city.country.id)
+                $('#modalUpdateCity').modal('show');
+
+            })
+
+            .fail((jqXHR) => {
+                console.log(jqXHR)
+            })
+        })
+    }
+
+
+    let btnUpdateCity = $('#btnUpdateCity');
+    $('#btnUpdateCity').on('click', function (){
+        city.name = $('#usernameUp').val();
+        country.id = $('#countryUp').val();
+        country.name = $('#countryUp :selected').text();
+        city.area = $('#areaUp').val();
+        city.population = $('#populationUp').val();
+        city.gdp = $('#gdpUp').val();
+        city.description = $('#descriptionUp').val();
+        city.country = country;
+
+        $.ajax({
+            "headers": {
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            "type": "PUT",
+            "url": "http://localhost:8080/api/cities/update",
+            "data": JSON.stringify(city)
+        })
+        .done((data) => {
+            console.log(data)
+            city = data;
+            country = city.country;
+
+            let currentRow = $('#tr_' + city.id);
+            // let id = $(currentRow).attr("id")
+            // let rs = id.replace("tr_", "abc_");
+            // console.log(rs);
+            let str =`
+                  <tr id="tr_${city.id}">
+                    <td>${city.id}</td>
+                    <td>${city.name} </td>
+                    <td>${country.name} </td>
+                    <td>
+                            <button type="button" data-id="${city.id}" class="btn btn-outline-secondary edit"> Edit </button>
+                        </td>
+                        <td>
+                            <button type="button" data-id="${city.id}" class="btn btn-outline-danger deleted">Deactive </button>
+                        </td>
+
+                </tr>
+            `;
+            currentRow.replaceWith(str)
+
+            App.SweetAlert.showSuccessAlert("Cập Nhật Thành Công")
+            $('#modalUpdateCity').modal('hide');
+
+
+            handleShow(); /*Khi thành công vẽ lại, cho sử dụng nút edit và deleted*/
+
+        })
+        .fail((jqXHR) =>{
+            console.log(jqXHR)
+        })
+    })
+
+    /*Hàm xóa mềm theo id,*/
+    function handleConfirmDelete() {
+        $('button.deleted').on('click', function () {
+            let cityIdDeleted = $(this).data('id')
+            console.log(cityIdDeleted)
+            App.SweetAlert.showConfirmDelete()
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            "headers": {
+                                "accept": "application/json",
+                                "content-type": "application/json"
+                            },
+                            "type": "DELETE",
+                            "url": "http://localhost:8080/api/cities/delete/" + cityIdDeleted,
+                            "data": JSON.stringify(city)
+                        })
+                            .done((data) => {
+                                $('#tr_' + cityIdDeleted).remove();
+
+                                App.SweetAlert.showSuccessAlert("Xóa Thành Công")
+                            })
+                            .fail((error) => {
+                                console.log(error)
+                                App.SweetAlert.showErrorAlert('Xóa thất bại');
+                            });
+                    }
+                })
+        })
+    }
+
+
+    function unbindAll(){
+        $('.edit').off()
+        $('.deleted').off()
+    }
+
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+.header{
+    background-color: #299BE4;
+    padding: 16px 30px;
+
+}
+
+.header--right a {
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+.table thead{
+    background-color: #4CAF50;
+    color: white ;
+    text-align: center;
+}
+
+.padding-0{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.table tbody tr td:last-child a{
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.table tbody tr td{
+    text-align: center;;
+}
+
+
+/*Xử lí hiện lỗi validator*/
+
+.modal-alert-danger {
+    padding: 10px 35px;
+    margin-bottom: 15px;
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+.show {
+    display: block !important;
+}
+
+.hide {
+    display: none;
+}
+
+
+.message{
+    color:green;
+}
+
+label.error{
+    margin-top: 5px;
+    color: #842029;
+}
+
+label.error {
+    display: list-item;
+}
+
+
+
+
+
+

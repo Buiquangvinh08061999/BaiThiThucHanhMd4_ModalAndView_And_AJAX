@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="/utils/head :: head"/>
+
+</head>
+<body>
+
+<div class="container">
+    <div class="row header">
+        <div class="col-sm-9">
+            <h1>Danh sách thành phố</h1>
+        </div>
+
+        <div class="col-sm-3" style="margin-top: 10px">
+            <a href="/home/create" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tạo Thành Phố Mới</a>
+        </div>
+        <!--Đường dẫn viết kiểu spring boot là như vậy, ta phải tuân thủ quy theo quy tắc của nó, tự viết tay toàn bộ các liên kết-->
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 padding-0">
+            <table class="table table-hover table-bordered" style="text-align: center">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Thành Phố</th>
+                        <th>Quốc Gia</th>
+                        <th colspan="3" class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                <th:block th:each="cityDTO : ${cityDTOList}">
+                    <tr>
+                        <td th:text="${cityDTO.id}"></td>
+                        <td><a th:href="@{/home/info/__${cityDTO.id}__}"> <span th:text="${cityDTO.cityName}"> </span></a> </td> <!--Hiển thị tên, tên đó là liên kết tới đường link Xem thông tin luôn. Gói gọn các thông tin trong thẻ a, Thẻ td rỗng chỉ bọc ngoài-->
+                        <td th:text="${cityDTO.country.getNameCountry()}"></td>
+
+
+                        <td>
+                            <a th:href="@{/home/update/__${cityDTO.id}__}">Update</a>
+                        </td>
+
+                        <td>
+                            <a th:href="@{/home/info/__${cityDTO.id}__}"> Show InFo</a>
+                        </td>
+
+                        <td>
+                            <a href="javascript: void(0);" onclick="deleteByIdAndName(this.id, this.name)" data-th-id="${cityDTO.id}" data-th-name="${cityDTO.cityName}"  style="color: red"> Delete </a>
+                        </td>
+
+                    </tr>
+                </th:block>
+
+                </tbody>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    /*Truyền id và name theo cách như trên, ta có data-th-id, và data-th-name truyền vào để lấy giá trị*/
+    function deleteByIdAndName(id , name){
+        console.log(id + name + " id và name truyền vào đã tìm ra ở phía trên ta đã truyền vào cityDTO.id và cityDTO.name ")
+        let confirmStr = confirm("Bạn có chắc muốn xóa thành phố:"+ name + "?")
+        if(confirmStr == true ){
+
+            location.href = '/home/delete/' + id;
+
+            console.log(id + "id tìm được truyền vào thành công")
+            alert("Xóa đối tượng thành công!")
+
+        }else {
+            alert("Hủy thao tác thành công!")
+        }
+
+    }
+
+
+
+
+</script>
+
+</body>
+
+<script>
+
+</script>
+
+
+
+</html>

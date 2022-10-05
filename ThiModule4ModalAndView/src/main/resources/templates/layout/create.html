@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="/utils/head :: head"/>
+    <style>
+      select{
+          padding: 5px 20px;
+          border-radius: 5px;
+      }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Tạo Thành Phố</h3>
+
+            <!--DỮ liệu lấy ở phần th:object lấy ở Get, tất cá điều lấy ở get-->
+            <!--trỏ tới controller đấy bên home có đường dẫn create này, thêm mới mặc định là POST dữ liệu mới lên-->
+            <form action="/home/create" method="post" th:object="${city}">   <!--th:object : dùng để trỏ tới thuộc tính của đối tượng chứa các trường trong nó-->
+                <div class="form-group">
+                    <label>Tên Thành Phố :</label>
+                    <input type="text"  class="form-control" th:field="${city.cityName}">  <!--thu nhập dữ liệu,cách 1, đẩy ra trường text -->
+                </div>
+
+                <div class="form-group">
+                    <label>Diện tích (km2) :</label>
+                    <input type="number"  class="form-control" th:field="*{area}" >  <!--thu nhập dữ liệu, cách 2, đẩy ra trường text -->
+                </div>
+
+                <div class="form-group">
+                    <label>Dân số (người) :</label>
+                    <input type="number"  class="form-control" th:field="${city.population}">  <!--thu nhập dữ liệu, đẩy ra trường text -->
+                </div>
+
+                <div class="form-group">
+                    <label>GDP :</label>
+                    <input type="number"  class="form-control" th:field="${city.gdp}">  <!--thu nhập dữ liệu, đẩy ra trường text -->
+                </div>
+
+                <div class="form-group">
+                    <label>Mô tả(description) :</label>
+<!--                    <input type="text"  class="form-control" th:field="${city.description}">  &lt;!&ndash;thu nhập dữ liệu, đẩy ra trường text &ndash;&gt;-->
+                    <textarea type="text" cols="100" class="form-control"  th:field="${city.description}"></textarea> <!--Mặc định nó đó có chiều dài ngang ô input-->
+                </div>
+
+                <div class="form-group">
+                    <label>Quốc gia :</label>
+                    <select th:field="${city.country.id}" > <!--phải từ thằng cha vào thằng con, tức là city mới đến country-->
+                        <th:block th:each="countryDTO : ${countryDTOList}"> <!--Sử dụng vòng lặp, có bao nhiêu thì hiển thị bấy nhiêu để người dùng lựa chọn-->
+
+                            <option th:value="${countryDTO.id}"  th:text="${countryDTO.nameCountry}" ></option>  <!--Dùng th:text để hiển thị tên ra cho người dùng chọn-->
+
+                        </th:block>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Tạo Thành Phố</button> <!--type submit để nhận dữ liệu-->
+
+
+                <a href="/home/list" class="btn btn-primary">Back to list</a> <!--quay về trang list-->
+            </form>
+
+        </div>
+    </div><!--end row-->
+
+    <!--Nhận dữ liệu, lỗi hoặc thành công từ modal.addObject , với từ khóa được ghi vào-->
+    <div class="footer">
+        <!--Thông báo thành công-->
+        <th:block th:if="${success}">
+            <div class="success">
+                <div class="container mt-3" style="background-color: #85f29c94; color: #167241">
+
+                    <span th:text="${success}"></span> <!--1 thông báo thành công số lượng ít, nên ta cũng không cần dùng thẻ ul-li  -->
+
+                </div>
+            </div>
+        </th:block>
+
+
+        <!--Thông báo lỗi, dùng forEach để lặp hết các lỗi và hiển thị ra-->
+        <th:block th:if="${errors}">
+            <div class="errors">
+                <div class="container mt-3" style="background-color: #ffcfcf; color: #8b3131; padding: 10px" >
+
+                    <th:block th:each="e : ${errors}"> <!--Lặp tất cả các lỗi sẽ hiển thị ra-->
+                        <ul>
+                            <li th:text="${e.getDefaultMessage()}"></li> <!--Phải chấm tới từng lỗi, nếu không nó sẽ hiển thị rất nhiều trường không mong muốn-->
+                        </ul>
+                    </th:block>
+
+                </div>
+            </div>
+        </th:block>
+
+
+        <!--Trùng tên thì báo lỗi-->
+        <th:block th:if="${nameErrors}">
+            <div class="errors">
+                <div class="container mt-3" style="background-color: #ffcfcf; color: #8b3131; padding: 10px">
+
+                    <span th:text="${nameErrors}"></span> <!--1 thông báo lỗi trùng tên số lượng ít, nên ta cũng không cần dùng thẻ ul-li  -->
+
+                </div>
+            </div>
+        </th:block>
+
+
+        <!--Muốn hiển thị 1 lỗi nhưng nó không hiển thị theo ý muốn, hiển thị dữ liệu rất nhiều, cái này lỗi-->
+<!--        <th:block th:if="${errors}">-->
+<!--            <div class="errors">-->
+<!--                <div class="container">-->
+<!--                    <ul>-->
+<!--                        <li th:text="${errors}"></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </th:block>-->
+
+    </div><!--end footer-->
+
+</div><!--end container-->
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <title>List</title>-->
+<!--    <th:block th:replace="/layout/head :: head"/>-->
+
+<!--    <link rel="stylesheet" href="/assets/css/bootstrap.minTwo.css">-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <div class="row header">-->
+<!--        <div class="col-sm-9 text-white">-->
+<!--            <h1>Danh sách thành phố</h1>-->
+<!--        </div>-->
+
+<!--        <div class="col-sm-3 header&#45;&#45;right">-->
+<!--            <button type="button" class="btn btn-success create-modal">Create City</button>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+<!--    <div class="row">-->
+<!--        <div class="col-sm-12 padding-0">-->
+<!--            <table class="table" id="tbUser">-->
+<!--                <thead>-->
+<!--                    <tr>-->
+<!--                        <th>#</th>-->
+<!--                        <th>Thành Phố</th>-->
+<!--                        <th>Quốc Gia</th>-->
+<!--                        <th colspan="2">Action</th>-->
+<!--                    </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+<!--    <th:block th:replace="/layout/script :: script"/>-->
+
+<!--    <th:block th:replace="/layout/modal_create :: modal_create"/>-->
+
+<!--    <th:block th:replace="/layout/modal_update :: modal_update"/>-->
+
+<!--<script>-->
+<!--    let user = new User();-->
+
+<!--    $('.create-modal').on('click', function () {-->
+<!--        $('#modalCreateUser').modal('show')-->
+<!--    })-->
+
+<!--    let btnCreateUser = $('#btnCreateUser')-->
+<!--    btnCreateUser.on('click', function (){-->
+
+<!--        user.username = $("#username").val();-->
+<!--        user.fullname = $("#fullname").val();-->
+<!--        user.password = $("#password").val();-->
+<!--        user.phone = $("#phone").val();-->
+
+<!--        $.ajax({-->
+<!--            "headers": {-->
+<!--                "accept": "application/json",-->
+<!--                "content-type": "application/json"-->
+<!--            },-->
+<!--            "type": "POST",-->
+<!--            "url": "http://localhost:8080/api/users/create",-->
+<!--            "data": JSON.stringify(user)-->
+<!--        })-->
+<!--        .done((data) =>{-->
+<!--            user = data;-->
+<!--            let str =`-->
+<!--                  <tr id="tr_${user.id}">-->
+<!--                    <td>${user.id}</td>-->
+<!--                    <td>${user.username} </td>-->
+<!--                    <td>${user.password} </td>-->
+<!--                    <td>${user.fullname} </td>-->
+<!--                    <td>${user.phone} </td>-->
+<!--                    <td>-->
+<!--                            <button type="button" data-id="${user.id}" class="btn btn-outline-secondary edit"> Edit </button>-->
+<!--                        </td>-->
+<!--                        <td>-->
+<!--                            <button type="button" data-id="${user.id}" class="btn btn-outline-danger deactive">Deactive </button>-->
+<!--                        </td>-->
+<!--                </tr>-->
+<!--                `;-->
+<!--            $('#tbUser tbody').prepend(str);-->
+
+<!--            App.SweetAlert.showSuccessAlert("Tao moi thanh cong")-->
+<!--            $('#modalCreateUser').modal('hide');-->
+<!--            clearInput();-->
+
+<!--            handleShowUpdate()-->
+<!--        })-->
+<!--        .fail((jqXHR)=>{-->
+<!--            console.log(jqXHR)-->
+<!--        })-->
+<!--    })-->
+
+<!--    function clearInput(){-->
+<!--        $('#frmCreateCustomer input').val("")-->
+<!--    }-->
+
+<!--    /*Hien thi tat ca danh sach, dung $.each*/-->
+<!--    function findAllUser(){-->
+<!--        $.ajax({-->
+<!--            header: {-->
+<!--                "accept": "application/json",-->
+<!--                "content-type": "application/json"-->
+<!--            },-->
+<!--            type: "GET",-->
+<!--            url: "http://localhost:8080/api/users",-->
+<!--        })-->
+<!--        .done((data) => {-->
+<!--            $.each(data ,(i, item)=>{-->
+<!--                user = item;-->
+<!--                let str =`-->
+<!--                  <tr id="tr_${user.id}">-->
+<!--                    <td>${user.id} </td>-->
+<!--                    <td>${user.username} </td>-->
+<!--                    <td>${user.password} </td>-->
+<!--                    <td>${user.fullname} </td>-->
+<!--                    <td>${user.phone} </td>-->
+<!--                    <td>-->
+<!--                        <button type="button" data-id="${user.id}" class="btn btn-outline-secondary edit"> Edit </button>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <button type="button" data-id="${user.id}" class="btn btn-outline-danger deactive">Deactive </button>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                `;-->
+<!--                $('#tbUser tbody').prepend(str);-->
+
+<!--                handleShowUpdate();-->
+<!--            })-->
+<!--        })-->
+<!--    }-->
+<!--    findAllUser()-->
+
+
+<!--    /*Hàm hiển thị thông tin theo id, phải viết hàm findId bên controller*/-->
+<!--    function handleShowUpdate(){-->
+<!--        $('button.edit').on('click', function () {-->
+<!--            let id = $(this).data('id');-->
+<!--            console.log(id)-->
+<!--            $.ajax({-->
+<!--                "headers": {-->
+<!--                    "accept": "application/json",-->
+<!--                    "content-type": "application/json"-->
+<!--                },-->
+<!--                "type": "GET",-->
+<!--                "url": "http://localhost:8080/api/users/" + id,-->
+<!--            })-->
+<!--            .done((data)=>{-->
+<!--                user = data;-->
+<!--                $('#usernameUp').val(user.username);-->
+<!--                $('#passwordUp').val(user.password);-->
+<!--                $('#fullnameUp').val(user.fullname);-->
+<!--                $('#phoneUp').val(user.phone);-->
+
+<!--                $('#modalUpdateUser').modal('show')-->
+
+<!--            })-->
+<!--        })-->
+<!--    }-->
+
+
+
+
+
+<!--    // function unbinAll() {-->
+<!--    //     $('button.edit').off()-->
+<!--    // }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->

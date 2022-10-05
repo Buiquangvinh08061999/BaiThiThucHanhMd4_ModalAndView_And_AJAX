@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="/utils/head :: head"/>
+</head>
+<body>
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-9 mt-3">
+            <h1>Thành phố <span th:text="${city.cityName}"></span></h1>
+        </div>
+
+        <div class="col-sm-3 mt-3">
+            <a href="/home/list" class="btn btn-primary">Back to list</a> <!--Quay lại trang list, trỏ đường dẫn href vào thẻ a, đường dẫn sổ ra trang lis ta đã làm ở controller, ResquetMapping-->
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-9 mt-4">
+
+            <table class="table table-hover">
+                <tbody>
+                <th:block th:object="${city}">
+                    <tr>
+                        <th>Tên thành phố:</th>
+                        <td th:text="${city.cityName}"></td> <!--Lấy tên ra từ modal.addObject ta truyền vào tất cả trường của cityOptinol vào đấy rồi-->
+                    </tr>
+                    <tr>
+                        <th>Quốc gia:</th>
+                        <td th:text="${city.country.getNameCountry()}"></td> <!--Lấy tên ra từ modal.addObject ta truyền vào tất cả trường của cityOptinol vào đấy rồi-->
+                    </tr>
+                    <tr>
+                        <th>Diện tích:</th>
+                        <td th:text="${city.area}"></td>
+                    </tr>
+                    <tr>
+                        <th>Dân số:</th>
+                        <td th:text="${city.population}"></td>
+                    </tr>
+                    <tr>
+                        <th>GDP:</th>
+                        <td th:text="${city.gdp}"></td>
+                    </tr>
+                    <tr>
+                        <th>Mô tả:</th>
+                        <td th:text="${city.description}"></td>
+                    </tr>
+
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--Phần cuối , hành động action, ở đây phần show thông tin, nhưng ta cũng phải cho các chức cập nhật, xóa sửa, để nâng cao trình độ hơn-->
+    <div class="row mb-3">
+        <div class="col-sm-4">
+            <th:block>
+
+                <a th:href="@{/home/update/__${city.id}__}"   class="btn btn-primary">Update</a><!--đã có id của show thông tin, ta tận dụng để xóa update sản phẩm theo id luôn-->
+
+                <a href="javascript: void(0);" onclick="deleteById(this.id, this.name)" data-th-id="${city.id}" data-th-name="${city.cityName}"  class="btn btn-danger">Delete</a>  <!--Tận dụng tìm được id ở đây, ta truyền vào để hiển thị thông báo xóa sản phẩm hay không luôn-->
+
+
+            </th:block>
+        </div>
+    </div>
+
+
+</div> <!--end container-->
+
+<script>
+    function deleteById(id , name){
+        console.log(id + name + " id và name truyền vào đã tìm ra ở phía trên ta đã truyền vào cityDTO.id và cityDTO.name ")
+        let confirmStr = confirm("Bạn có chắc muốn xóa thành phố:"+ name + "?")
+        if(confirmStr == true ){
+
+            location.href = '/home/delete/' + id;
+
+            console.log(id + "id tìm được truyền vào thành công")
+            alert("Xóa đối tượng thành công!")
+
+        }else {
+            alert("Hủy thao tác thành công!")
+        }
+    }
+
+
+</script>
+</body>
+</html>

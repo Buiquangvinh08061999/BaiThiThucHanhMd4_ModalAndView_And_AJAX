@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:replace="/utils/head :: head"/>
+    <style>
+        select{
+            padding: 5px 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Chỉnh sửa thành phố <span th:text="${city.cityName}"></span></h3>
+
+            <!--DỮ liệu lấy ở phần th:object lấy ở Get, tất cá điều lấy ở get-->
+            <!--trỏ tới controller đấy bên home có đường dẫn create này, thêm mới mặc định là POST dữ liệu mới lên-->
+            <form  method="post" th:object="${city}">
+                <div class="form-group">
+                    <label>Tên Thành Phố :</label>
+                    <input type="text"  class="form-control" th:field="${city.cityName}">  <!-- đã hiển thị thông tin theo id truyền vào-->
+                </div>
+
+                <div class="form-group">
+                    <label>Diện tích (km2) :</label>
+                    <input type="number"  class="form-control" th:field="*{area}" >  <!--thu nhập dữ liệu, cách 2, đẩy ra trường text -->
+                </div>
+
+                <div class="form-group">
+                    <label>Dân số (người) :</label>
+                    <input type="number"  class="form-control" th:field="${city.population}">  <!--thu nhập dữ liệu, đẩy ra trường text -->
+                </div>
+
+                <div class="form-group">
+                    <label>GDP :</label>
+                    <input type="number"  class="form-control" th:field="${city.gdp}">  <!--thu nhập dữ liệu, đẩy ra trường text -->
+                </div>
+
+                <div class="form-group">
+                    <label>Mô tả(description) :</label>
+<!--                    <input type="text"  class="form-control" th:field="${city.description}">  &lt;!&ndash;thu nhập dữ liệu, đẩy ra trường text &ndash;&gt;-->
+                    <textarea type="text" cols="100" class="form-control"  th:field="${city.description}"></textarea> <!--Mặc định nó đó có chiều dài ngang ô input-->
+                </div>
+
+                <div class="form-group">
+                    <label>Quốc gia :</label>
+                    <select th:field="${city.country.id}" > <!--phải từ thằng cha vào thằng con, tức là city mới đến country-->
+                        <th:block th:each="countryDTO : ${countryDTOList}"> <!--Sử dụng vòng lặp, có bao nhiêu thì hiển thị bấy nhiêu để người dùng lựa chọn-->
+
+                            <option th:value="${countryDTO.id}" th:text="${countryDTO.nameCountry}" ></option>  <!--Dùng th:text để hiển thị tên ra cho người dùng chọn-->
+
+                        </th:block>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Cập Nhật Thành Phố</button> <!--type submit để nhận dữ liệu-->
+
+
+                <a href="/home/list" class="btn btn-primary">Back to list</a> <!--quay về trang list-->
+
+
+                <a th:href="@{/home/info/__${city.id}__}" class="btn btn-primary">Trang info </a> <!--quay về trang info ta phải truyền vào id đã tìm được ở đấy ra, tức ta kích vào id nào thì nó sẽ trỏ theo-->
+            </form>
+
+        </div>
+    </div><!--end row-->
+
+    <!--Nhận dữ liệu, lỗi hoặc thành công từ modal.addObject , với từ khóa được ghi vào-->
+    <div class="footer">
+        <!--Thông báo thành công-->
+        <th:block th:if="${success}">
+            <div class="success">
+                <div class="container">
+                    <ul>
+                        <li th:text="${success}">  </li>
+                    </ul>
+                </div>
+            </div>
+        </th:block>
+
+
+        <!--Thông báo lỗi-->
+        <th:block th:if="${errors}">
+            <div class="errors">
+                <div class="container">
+                    <ul>
+                        <li th:text="${errors}">  </li>
+                    </ul>
+                </div>
+            </div>
+        </th:block>
+
+
+        <!--Thông báo lỗi-->
+        <th:block th:if="${errors}">
+            <div class="errors">
+                <div class="container">
+
+                    <th:block th:each="e : ${errors}"> <!--Lặp tất cả các lỗi sẽ hiển thị ra-->
+                        <ul>
+                            <li th:text="${e.getDefaultMessage()}"></li>
+                        </ul>
+                    </th:block>
+
+                </div>
+            </div>
+        </th:block>
+
+
+    </div><!--end footer-->
+
+
+</div><!--end container-->
+
+</body>
+</html>
